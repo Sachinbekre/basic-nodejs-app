@@ -9,6 +9,7 @@ const homeRouter = require("./routers/Home");
 const adminRouter = require("./routers/Admin");
 
 const rootDir = require('./utils/path');
+const db = require("./utils/mydatabase");
 
 
 
@@ -17,6 +18,14 @@ const app = express();
 app.set('view engine','ejs');
 
 app.set('views','views');
+
+
+
+db.execute(`select * from product`).then(data =>{
+  console.log(data);
+}).catch(error =>{
+  console.log(error);
+})
 
 app.use(express.static(path.join(rootDir,'public')));
 
