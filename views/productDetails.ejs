@@ -1,0 +1,31 @@
+<%- include('includes/header.ejs') %>
+
+    <body>
+        <%- include('includes/navigation.ejs') %>
+            <main>
+                <div class="container">
+                    <h3>Product Details</h3>
+                    <div class="card px-2" style="width: 18rem;">
+                        <img src="<%= product.imageUrl %>" class="card-img-top mt-2">
+                        <div class="d-flex"><label for="name">Name : </label>
+                            <span class="ms-2">
+                                <%= product.productName %>
+                            </span>
+                        </div>
+                        <div class="d-flex"><label for="price">Price : </label>
+                            <span class="ms-2">
+                                <%= product.price %>
+                            </span>
+                        </div>
+                        <div class=""> <label for="description">Description : </label>
+                            <p>
+                                <%= product.description %>
+                            </p>
+                        </div>
+                        <div class="text-center my-2">
+                            <%- include('includes/cartButton.ejs') %>
+                        </div>
+                    </div>
+            </main>
+    </body>
+    <%- include('includes/footer.ejs') %>

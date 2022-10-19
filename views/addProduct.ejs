@@ -1,0 +1,37 @@
+<%- include('includes/header.ejs') %>
+
+    <body>
+        <%- include('includes/navigation.ejs') %>
+            <main>
+                <div class="container">
+                    <h2><%= edit?'Edit Product':'Add Product' %> </h2>
+                    <form method="POST" action="<%= edit?'/products/edit':'/products/add' %>">
+                        <% if(edit){ %> 
+                            <input type="hidden" value="<%= products.id %>" name="id">
+                        <% }%> 
+                        <div class="mb-3">
+                            <label for="ProductName" class="form-label">Product Name :</label>
+                            <input type="text" class="form-control" name="productName" 
+                             value="<%= edit?products.productName:'' %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="ImageUrl" class="form-label">Image Url :</label>
+                            <input type="text" class="form-control" name="imageUrl"
+                            value="<%= edit?products.imageUrl:'' %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Price" class="form-label">Price :</label>
+                            <input type="text" step="any" class="form-control" name="price"
+                            value="<%= edit?products.price:'' %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description :</label>
+                            <textarea class="form-control" name="description" rows="3"
+                            ><%= edit?products.description:'' %></textarea>
+                        </div>
+                        <button class="btn btn-primary ms-2"><%= edit?'Edit Product':'Add Product' %></button>
+                    </form>
+                </div>
+            </main>
+    </body>
+    <%- include('includes/footer.ejs') %>
