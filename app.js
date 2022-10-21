@@ -9,7 +9,8 @@ const homeRouter = require("./routers/Home");
 const adminRouter = require("./routers/Admin");
 
 const rootDir = require('./utils/path');
-const db = require("./utils/mydatabase");
+const sequelize = require("./utils/mydatabase");
+const Product = require("./models/ProductModel");
 
 
 
@@ -19,13 +20,6 @@ app.set('view engine','ejs');
 
 app.set('views','views');
 
-
-
-db.execute(`select * from product`).then(data =>{
-  console.log(data);
-}).catch(error =>{
-  console.log(error);
-})
 
 app.use(express.static(path.join(rootDir,'public')));
 
@@ -47,6 +41,25 @@ app.use((req, res, next) => {
   }
   res.status(404).render('pageNotFound',Obj)
 });
+
+// sequelize.authenticate().then(() =>{
+//   console.log('connection established successfully');
+// }).catch(error =>{
+//   console.log("error in connection");
+// })
+
+// Product.sync().then(result => {
+//   console.log("res",result);
+// });
+
+// const sampleProduct = {
+//   name:'sample',
+//   description:'sample description',
+//   imageUrl:'adasdsadasdasd',
+//   price:12.12
+// };
+
+
 
 app.listen(3001, () => {
   console.log("server connected at port 3001");

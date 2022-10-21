@@ -6,17 +6,20 @@ const {
 const { getProductById, getAllProducts } = require("../models/Product");
 
 exports.postCartPage = (req, res) => {
-  const pid = req.body.productId;
-  getProductById(pid, (product) => {
-    addToCart(pid, product.price);
+  const productId = req.body.productId;
+  getProductById(productId).then(([product]) =>{
+    addToCart(productId, product.price);
     res.redirect("/");
+  }).catch(error =>{
+    console.log(error);
   });
 };
 
 exports.getCartPage = (req, res) => {
   getCartDetailsFromFile((cart) => {
     const cartProducts = cart.products;
-    getAllProducts((products) => {
+
+    getAllProducts().then(([products]) => {
       const productsData = [];
       let totalPrice = 0;
       for (let cartItem of cartProducts) {
@@ -36,6 +39,8 @@ exports.getCartPage = (req, res) => {
         totalPrice: totalPrice,
       };
       res.render("cartDetails", viewData);
+    }).catch(error=>{
+      console.log(error);
     });
   });
 };

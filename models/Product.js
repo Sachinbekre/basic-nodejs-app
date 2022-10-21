@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const rootDir = require("../utils/path");
 const { deleteProductFromCart } = require('./Cart');
+const db = require('../utils/mydatabase')
 
 const getProductsFromFile = (callback) =>{
     const productsPath = path.join(rootDir, "data", "products.json");
@@ -14,6 +15,15 @@ const getProductsFromFile = (callback) =>{
 }
 
 exports.saveProducts = (product) => {
+  console.log('save product',product);
+  return db.execute(`INSERT INTO product (name, description, imageUrl, price) VALUES (?, ?, ?, ?)`,[
+    product.name,
+    product.description,
+    product.imageUrl,
+    product.price,
+  ]);
+
+
   const productsPath = path.join(rootDir, "data", "products.json");
 
   getProductsFromFile ((productsData) =>{
@@ -24,15 +34,13 @@ exports.saveProducts = (product) => {
   });
 };
 
-exports.getAllProducts = (callback) => {
-  getProductsFromFile(callback);
+exports.getAllProducts = () => {
+  // getProductsFromFile(callback);
+  // return db.execute(`select * from product`);
 };
 
-exports.getProductById = (productId,callback) =>{
-  getProductsFromFile(products =>{
-    const product = products.find(p => p.id.toString() === productId);
-    callback(product);
-  });
+exports.getProductById = (productId) =>{
+  return db.execute(`select * from product where id = ?`, [productId]);
 }
 
 exports.updateProductById = (product,id) =>{
