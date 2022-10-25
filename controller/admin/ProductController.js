@@ -1,3 +1,4 @@
+const Category = require("../../models/CategoryModel");
 const {
   saveProducts,
   getAllProducts,
@@ -6,36 +7,52 @@ const {
   deleteProductById,
 } = require("../../models/Product");
 const Product = require("../../models/ProductModel");
+const User = require("../../models/UserModel");
 
 exports.getProducts = (req, res) => {
-  let viewData = {
-    edit: false,
-    page: "Add Product Page",
-    name: "Add Product",
-  };
-  res.render("addProduct", viewData);
+  Category.findAll()
+    .then((categories) => {
+      let viewData = {
+        edit: false,
+        page: "Add Product Page",
+        categories: categories,
+      };
+      res.render("addProduct", viewData);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 exports.addProduct = (req, res) => {
+  const categoryId = req.body.categoryId;
   const product = {
     name: req.body.name,
     imageUrl: req.body.imageUrl,
     price: parseFloat(req.body.price),
     description: req.body.description,
+    categoryId: req.body.categoryId,
   };
-  const productObj = Product.build(product);
-  productObj
-    .save()
-    .then((result) => {
-      res.redirect("/");
+  let categoryObj;
+  Category.findByPk(categoryId)
+    .then((category) => {
+      categoryObj = category;
+      return req.user.createProduct(product);
     })
-    .catch((error) => {});
+    .then((productObj) => {
+      return productObj.setCategory(categoryObj);
+    })
+    .then(() => {
+      return res.redirect("/");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 exports.getAdminProductPage = (req, res) => {
-  Product.findAll()
+  Product.findAll({include:[{model:Category},{model:User}]})
     .then((products) => {
-      console.log("Admin products", products);
       let viewData = {
         admin: true,
         products: products,
@@ -47,13 +64,17 @@ exports.getAdminProductPage = (req, res) => {
 
 exports.getEditProductPage = (req, res) => {
   const productId = req.params.productId;
+  let viewData = {
+    edit: true,
+    page: "Edit Page",
+  };
   Product.findByPk(productId)
     .then((product) => {
-      let viewData = {
-        edit: true,
-        page: "Edit Page",
-        products: product,
-      };
+      viewData.products  = product;
+      return Category.findAll({ attributes: ["id", "name"] });
+    })
+    .then((categories) => {
+      viewData.categories  = categories;
       res.render("addProduct", viewData);
     })
     .catch((error) => {
@@ -63,20 +84,13 @@ exports.getEditProductPage = (req, res) => {
 
 exports.postEditProductPage = (req, res) => {
   const productId = req.body.id;
-  // let product = {
-  //   id: req.body.id,
-  //   name: req.body.name,
-  //   imageUrl: req.body.imageUrl,
-  //   price: req.body.price,
-  //   description: req.body.description,
-  // };
-
   Product.findByPk(productId)
     .then((product) => {
       product.name = req.body.name;
       product.imageUrl = req.body.imageUrl;
       product.description = req.body.description;
       product.price = req.body.price;
+      product.categoryId = req.body.categoryId
       return product.save();
     })
     .then(() => {

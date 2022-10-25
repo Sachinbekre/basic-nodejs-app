@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../utils/mydatabase");
 
 const Product = sequelize.define(
-  "Product",
+  "product",
   {
     id: {
       type: DataTypes.BIGINT,
@@ -23,11 +23,11 @@ const Product = sequelize.define(
       allowNull: false,
     },
     imageUrl: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   },
-  { tableName: "Product" }
+  { tableName: "product" }
 );
 
 module.exports = Product;

@@ -15,7 +15,6 @@ const getProductsFromFile = (callback) =>{
 }
 
 exports.saveProducts = (product) => {
-  console.log('save product',product);
   return db.execute(`INSERT INTO product (name, description, imageUrl, price) VALUES (?, ?, ?, ?)`,[
     product.name,
     product.description,

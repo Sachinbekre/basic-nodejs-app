@@ -29,6 +29,18 @@
                             <textarea class="form-control" name="description" rows="3"
                             ><%= edit?products.description:'' %></textarea>
                         </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category :</label>
+                            <select class="form-select" name="categoryId">
+                                <option  value="">Select Category</option>
+                                <% for(let category of categories) { %> 
+                                    <option value="<%= category.id %>"
+                                       <%= edit && category.id === products.categoryId?'selected':'' %> >
+                                       <%= category.name %> 
+                                    </option>
+                                <% } %> 
+                              </select>
+                        </div>
                         <button class="btn btn-primary ms-2"><%= edit?'Edit Product':'Add Product' %></button>
                     </form>
                 </div>

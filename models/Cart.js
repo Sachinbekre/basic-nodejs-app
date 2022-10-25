@@ -43,12 +43,7 @@ exports.deleteProductFromCart = (productId,callback = '') => {
     this.getCartDetailsFromFile((cart) =>{
         debugger
         let cartProducts = cart.products;
-        console.log("cart call",cart);
-        console.log("productId call",productId);
-        // let updatedCartProducts = cartProducts.filter((prod) => prod.id.toString() !== productId.toString());
         let updatedCartProducts = cartProducts.filter((prod) => parseInt(prod.id) !== parseInt(productId));
-        // cart.products = [...updatedCartProducts]
-        // console.log("delete call",updatedCartProducts1);
         fs.writeFile(cartPath,JSON.stringify({products:updatedCartProducts}),(error) => {
             console.log(error);
         });

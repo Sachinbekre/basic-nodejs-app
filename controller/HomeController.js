@@ -1,8 +1,9 @@
-const { getAllProducts, getProductById } = require("../models/Product");
+const Category = require("../models/CategoryModel");
 const Product = require("../models/ProductModel");
+const User = require("../models/UserModel");
 
 exports.getHomePage = (req, res) => {
-  Product.findAll()
+  Product.findAll({include:[{model:Category},{model:User}]})
     .then((products) => {
       let viewData = {
         admin: false,
@@ -17,7 +18,6 @@ exports.getProductDetails = (req, res) => {
   let productId = req.params.productId;
   Product.findByPk(productId)
     .then((product) => {
-      console.log('productDetails',product);
       let viewData = {
         product: product,
       };
